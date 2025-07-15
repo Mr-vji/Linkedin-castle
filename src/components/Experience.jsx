@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from "react";
-import { CameraControls, Environment, Text } from "@react-three/drei";
+import { CameraControls, Environment, OrbitControls, Text } from "@react-three/drei";
 import { Bloom, EffectComposer } from "@react-three/postprocessing";
 import { Snowflakes } from "./Snowflakes";
 import { StarrySky } from "./StarrySky";
@@ -7,6 +7,8 @@ import { Castel } from "./Castel";
 import { Pointer } from "./Pointer";
 import { button, useControls } from "leva";
 import { useCameraStore } from "./useCameraStore";
+import { useFrame } from "@react-three/fiber";
+import * as THREE from "three";
 
 export const Experience = () => {
    const castleRef = useRef();
@@ -81,10 +83,62 @@ export const Experience = () => {
    const home = useRef();
    const MouseMOVER = useRef();
 
+   // let vec3 = new THREE.Vector3();
+   // const initialCameraPos = useRef();
+
+   // useFrame(({ camera, mouse }) => {
+   //    if (!initialCameraPos.current) {
+   //       // Store initial position once
+   //       initialCameraPos.current = camera.position.clone();
+   //    }
+
+   //    // Calculate target based on initial position
+   //    vec3.set(
+   //       initialCameraPos.current.x + mouse.x * 0.5 * 20,
+   //       initialCameraPos.current.y + mouse.y * 0.3 * 20,
+   //       initialCameraPos.current.z // keep original z fixed
+   //    );
+
+   //    // Lerp to target
+   //    camera.position.lerp(vec3, 0.02);
+
+   //    // Look at center
+   //    camera.lookAt(0, 0, 0);
+   // });
+
+   useFrame(({ mouse }) => {
+      if (!castleRef.current) return;
+
+      // Calculate target rotation based on mouse movement
+      const targetRotationX = mouse.y * 0.2; // tilt up/down
+      const targetRotationY = mouse.x * 0.4; // turn left/right
+
+      // Smoothly interpolate (lerp) the current rotation towards target
+      castleRef.current.rotation.x = THREE.MathUtils.lerp(
+         castleRef.current.rotation.x,
+         targetRotationX / 4,
+         0.09
+      );
+
+      castleRef.current.rotation.y = THREE.MathUtils.lerp(
+         castleRef.current.rotation.y,
+         targetRotationY / 2,
+         0.09
+      );
+   });
+
    return (
       <group>
          <Pointer />
-         <CameraControls
+         <OrbitControls
+            minDistance={19 * 2.5}
+            maxDistance={19 * 3}
+            minPolarAngle={Math.PI / 4 + 0.1}
+            maxPolarAngle={Math.PI / 2}
+            minAzimuthAngle={-Math.PI / 4}
+            maxAzimuthAngle={Math.PI / 4}
+         />
+         {/* <CameraControls
             ref={controls}
             makeDefault
             Disable
@@ -94,7 +148,7 @@ export const Experience = () => {
             truckSpeed={1}
             minDistance={30} // set your minimum distance here
             maxDistance={70}
-         />
+         /> */}
          <directionalLight intensity={0.5} position={[0, 2, 5]} color={"white"} />
          <pointLight color={"white"} intensity={1} position={[0, -0.3, 0]} />
          <Environment preset="forest" />

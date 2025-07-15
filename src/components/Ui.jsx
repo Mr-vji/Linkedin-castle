@@ -24,7 +24,7 @@ export const Ui = ({ visible }) => {
 
    return (
       <div className="fixed bottom-5 left-0 w-full flex justify-center space-x-4 px-4">
-         <button
+         {/* <button
             className={buttonClasses(activeView === "home")}
             onClick={() => handleViewClick("home", cameraPositions.zero)}
          >
@@ -47,7 +47,7 @@ export const Ui = ({ visible }) => {
             onClick={() => handleViewClick("view3", cameraPositions.three)}
          >
             View 3
-         </button>
+         </button> */}
 
          <label className="flex items-center space-x-3 bg-white/30 backdrop-blur-md px-4 py-2 rounded-full shadow-lg hover:bg-white/50 hover:scale-105 transition-transform duration-300 cursor-pointer">
             <input
