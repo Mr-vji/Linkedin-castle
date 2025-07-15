@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useCameraStore } from "./useCameraStore";
 
 export const Ui = ({ visible }) => {
@@ -9,6 +9,21 @@ export const Ui = ({ visible }) => {
    const setIsVisible = useCameraStore((state) => state.setIsVisible);
 
    const [activeView, setActiveView] = useState("home");
+   const [isPlaying, setIsPlaying] = useState(false); // to track play/pause
+
+   const audioRef = useRef(null);
+
+   // Play or pause based on isPlaying state
+   useEffect(() => {
+      if (audioRef.current) {
+         if (isPlaying) {
+            audioRef.current.play();
+            audioRef.current.volume = 0.3;
+         } else {
+            audioRef.current.pause();
+         }
+      }
+   }, [isPlaying]);
 
    const handleViewClick = (viewName, position) => {
       controls.setLookAt(...position, true, { duration: 2 });
@@ -24,31 +39,24 @@ export const Ui = ({ visible }) => {
 
    return (
       <div className="fixed bottom-5 left-0 w-full flex justify-center space-x-4 px-4">
-         {/* <button
-            className={buttonClasses(activeView === "home")}
-            onClick={() => handleViewClick("home", cameraPositions.zero)}
-         >
-            Home
-         </button>
-         <button
-            className={buttonClasses(activeView === "view1")}
-            onClick={() => handleViewClick("view1", cameraPositions.one)}
-         >
-            View 1
-         </button>
-         <button
-            className={buttonClasses(activeView === "view2")}
-            onClick={() => handleViewClick("view2", cameraPositions.two)}
-         >
-            View 2
-         </button>
-         <button
-            className={buttonClasses(activeView === "view3")}
-            onClick={() => handleViewClick("view3", cameraPositions.three)}
-         >
-            View 3
-         </button> */}
+         {/* Audio Element */}
+         <audio ref={audioRef} loop>
+            <source
+               src="/music/carol-of-the-bells-background-christmas-music-for-video-bells-ver-254194.mp3"
+               type="audio/mpeg"
+            />
+            Your browser does not support the audio element.
+         </audio>
 
+         {/* Music Toggle Button */}
+         <button
+            onClick={() => setIsPlaying(!isPlaying)}
+            className="bg-white/30 text-white px-4 py-2 rounded-full shadow-lg hover:bg-white/50 hover:scale-105 transition-transform duration-300 cursor-pointer"
+         >
+            {isPlaying ? "🔊 Playing" : "🔇 Muted"}
+         </button>
+
+         {/* Your existing toggle */}
          <label className="flex items-center space-x-3 bg-white/30 backdrop-blur-md px-4 py-2 rounded-full shadow-lg hover:bg-white/50 hover:scale-105 transition-transform duration-300 cursor-pointer">
             <input
                type="checkbox"

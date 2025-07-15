@@ -1,5 +1,12 @@
 import { useRef, useEffect, useState } from "react";
-import { CameraControls, Environment, OrbitControls, Text } from "@react-three/drei";
+import {
+   CameraControls,
+   Environment,
+   OrbitControls,
+   PositionalAudio,
+   PositionPoint,
+   Text,
+} from "@react-three/drei";
 import { Bloom, EffectComposer } from "@react-three/postprocessing";
 import { Snowflakes } from "./Snowflakes";
 import { StarrySky } from "./StarrySky";
@@ -193,6 +200,7 @@ export const Experience = () => {
                   Mr_Vji
                </Text>
             </group>
+
             <Castel position={[0, -5, 0]} />
          </group>
 
